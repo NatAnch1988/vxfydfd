@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat aplikacija</title>
+</head>
+<body>
+    <h1>Chat aplikacija</h1>
+    <input type="text" id="message" placeholder="Unesite poruku...">
+    <button type="button" id="send">Pošalji</button>
+    <ul id="messages"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+
+    <script>
+        // Inicijaliziraj Scaledrone
+        var scaledrone = new Scaledrone({
+            key: "fDFO6KFGLXFBD0jS",
+            channel: "chat"
+        });
+
+        // Prijavi se na kanal
+        scaledrone.on("connected", function() {
+            console.log("Prijavljen na kanal");
+        });
+
+        // Prilikom primitka nove poruke, prikaži je na ekranu
+        scaledrone.on("message", function(data) {
+            var message = data.message;
+            var author = data.author;
+
+            var li = document.createElement("li");
+            li.textContent = message + " (" + author + ")";
+
+            document.getElementById("messages").appendChild(li);
+        });
+
+        // Pošalji poruku kada korisnik klikne na gumb "Pošalji"
+        document.getElementById("send").addEventListener("click", function() {
+            var message = document.getElementById("message").value;
+            scaledrone.publish("message", message);
+            document.getElementById("message").value = "";
+        });
+    </script>
+</body>
+</html>
